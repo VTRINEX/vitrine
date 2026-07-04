@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINEL DE CONTROLE VIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 md:p-8 font-sans pb-24">
+    <div class="max-w-5xl mx-auto space-y-8">
+        
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl shadow-2xl">
+            <h2 class="text-base font-black text-purple-400 mb-4 tracking-wider uppercase">⚙️ Identidade & Rodapé do Site</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Nome da Vitrine</label>
+                    <input id="cfg-nome" type="text" placeholder="Ex: Seleção VIP" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Subtítulo / Slogan</label>
+                    <input id="cfg-sub" type="text" placeholder="Ex: Ofertas verificadas" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Nome para Direitos Autoriais</label>
+                    <input id="cfg-dir" type="text" placeholder="Ex: João Silva" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-purple-500">
+                </div>
+            </div>
+            <button onclick="salvarConfig()" id="btn-cfg" class="mt-4 bg-purple-600 hover:bg-purple-500 text-white font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-purple-600/20">💾 Atualizar Visual do Site</button>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4 mb-6">
+                <div>
+                    <h1 id="titulo-form" class="text-xl font-black text-amber-500 tracking-wide">⚡ CADASTRAR OU EDITAR PRODUTO</h1>
+                    <p class="text-xs text-zinc-400 mt-0.5">Toque nos campos para usar atalhos rápidos ou digite livremente</p>
+                </div>
+                <button id="btn-can" onclick="limparForm()" class="hidden bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold transition">Cancelar</button>
+            </div>
+
+            <input type="hidden" id="edit-id" value="">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Nome do Produto *</label>
+                    <input id="nome" type="text" placeholder="Ex: Fone Bluetooth TWS" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                </div>
+                
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Categoria (Preset Rápido) *</label>
+                    <input id="categoria" list="cats-list" type="text" placeholder="Escolha ou digite..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                    <datalist id="cats-list">
+                        <option value="Áudio e Fones">
+                        <option value="Setup Gamer">
+                        <option value="Acessórios Celular">
+                        <option value="Casa Inteligente">
+                        <option value="Achadinhos Shopee">
+                    </datalist>
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Preço (R$) *</label>
+                    <input id="preco" type="text" placeholder="Ex: 89.90" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Selo de Destaque (Preset Rápido)</label>
+                    <input id="destaque" list="dest-list" type="text" placeholder="Escolha um selo ou deixe em branco..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                    <datalist id="dest-list">
+                        <option value="🔥 Mais Vendido">
+                        <option value="⚡ Frete Grátis">
+                        <option value="🚀 Envio Imediato">
+                        <option value="💎 Oferta VIP">
+                    </datalist>
+                </div>
+
+                <div class="md:col-span-3">
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">URL da Imagem *</label>
+                    <input id="imagem" type="text" placeholder="https://..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                </div>
+                <div class="md:col-span-3">
+                    <label class="text-[11px] font-bold text-zinc-400 uppercase">Seu Link de Afiliado *</label>
+                    <input id="link" type="text" placeholder="https://shopee.com.br/..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white mt-1 focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+
+            <button onclick="salvarProduto()" id="btn-salvar" class="mt-6 w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black py-3.5 rounded-xl uppercase tracking-wider text-sm transition shadow-lg shadow-amber-500/20">➕ Cadastrar na Vitrine & Publicar</button>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl shadow-2xl">
+            <h2 class="text-base font-black text-zinc-200 mb-4 tracking-wider uppercase">📦 Ofertas Ativas no Site</h2>
+            <div id="lista-admin" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <script>
+        let produtos = [];
+
+        async function carregarTudo() {
+            const resCfg = await fetch('/api/config');
+            const cfg = await resCfg.json();
+            document.getElementById('cfg-nome').value = cfg.nomeSite || '';
+            document.getElementById('cfg-sub').value = cfg.subtitulo || '';
+            document.getElementById('cfg-dir').value = cfg.direitos || '';
+
+            const resProd = await fetch('/api/produtos');
+            produtos = await resProd.json();
+            renderizarLista();
+        }
+
+        async function salvarConfig() {
+            const btn = document.getElementById('btn-cfg');
+            btn.innerText = '⏳ ATUALIZANDO NUVEM...';
+            const body = {
+                nomeSite: document.getElementById('cfg-nome').value.trim(),
+                subtitulo: document.getElementById('cfg-sub').value.trim(),
+                direitos: document.getElementById('cfg-dir').value.trim()
+            };
+            await fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            alert('✅ Identidade atualizada no GitHub Pages!');
+            btn.innerText = '💾 Atualizar Visual do Site';
+        }
+
+        function renderizarLista() {
+            document.getElementById('lista-admin').innerHTML = produtos.map(p => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-zinc-950 p-4 rounded-2xl border border-zinc-800/80 gap-4">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.imagem}" class="w-14 h-14 rounded-xl object-cover border border-zinc-800" alt="">
+                        <div>
+                            <span class="text-[10px] uppercase font-black bg-zinc-800 text-amber-400 px-2 py-0.5 rounded">${p.categoria || 'Geral'}</span>
+                            <h3 class="font-bold text-white text-sm mt-1">${p.nome}</h3>
+                            <p class="text-xs text-amber-500 font-bold">R$ ${p.preco}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 self-end sm:self-center">
+                        <button onclick="editarProduto(${p.id})" class="bg-blue-950/60 text-blue-400 border border-blue-900/50 hover:bg-blue-900 font-bold px-4 py-2 rounded-xl text-xs transition">✏️ Editar</button>
+                        <button onclick="excluirProduto(${p.id})" class="bg-red-950/60 text-red-400 border border-red-900/50 hover:bg-red-900 font-bold px-4 py-2 rounded-xl text-xs transition">🗑️ Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function sincronizarServidor() {
+            const btn = document.getElementById('btn-salvar');
+            btn.innerText = '⏳ ENVIANDO PRO GITHUB... AGUARDE ATÉ 15s...';
+            try {
+                const res = await fetch('/api/produtos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(produtos) });
+                const data = await res.json();
+                if (data.success) alert('✅ SUCESSO! Salvo e publicado! O GitHub atualizará em 30 segundos.');
+                else alert('❌ ERRO NO GITHUB:\n' + data.erro);
+            } catch(e) { alert('Erro de comunicação.'); }
+            limparForm();
+            carregarTudo();
+        }
+
+        function salvarProduto() {
+            const idEdit = document.getElementById('edit-id').value;
+            const nome = document.getElementById('nome').value.trim();
+            const categoria = document.getElementById('categoria').value.trim();
+            const preco = document.getElementById('preco').value.trim();
+            const destaque = document.getElementById('destaque').value.trim();
+            const imagem = document.getElementById('imagem').value.trim();
+            const link = document.getElementById('link').value.trim();
+
+            if (!nome || !preco || !imagem || !link || !categoria) return alert('Preencha os campos obrigatórios (*)!');
+
+            if (idEdit) {
+                const index = produtos.findIndex(p => p.id == idEdit);
+                if (index !== -1) produtos[index] = { id: Number(idEdit), nome, categoria, preco, destaque, imagem, link };
+            } else {
+                produtos.push({ id: Date.now(), nome, categoria, preco, destaque, imagem, link });
+            }
+            sincronizarServidor();
+        }
+
+        function editarProduto(id) {
+            const p = produtos.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('nome').value = p.nome;
+            document.getElementById('categoria').value = p.categoria;
+            document.getElementById('preco').value = p.preco;
+            document.getElementById('destaque').value = p.destaque || '';
+            document.getElementById('imagem').value = p.imagem;
+            document.getElementById('link').value = p.link;
+
+            document.getElementById('titulo-form').innerText = '✏️ EDITANDO PRODUTO';
+            document.getElementById('btn-salvar').innerText = '💾 Salvar Alterações & Publicar';
+            document.getElementById('btn-salvar').className = 'mt-6 w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3.5 rounded-xl uppercase text-sm transition';
+            document.getElementById('btn-can').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function limparForm() {
+            document.getElementById('edit-id').value = '';
+            document.querySelectorAll('input[type="text"]:not([id^="cfg-"])').forEach(i => i.value = '');
+            document.getElementById('titulo-form').innerText = '⚡ CADASTRAR OU EDITAR PRODUTO';
+            document.getElementById('btn-salvar').innerText = '➕ Cadastrar na Vitrine & Publicar';
+            document.getElementById('btn-salvar').className = 'mt-6 w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black py-3.5 rounded-xl uppercase text-sm transition';
+            document.getElementById('btn-can').classList.add('hidden');
+        }
+
+        function excluirProduto(id) {
+            if (confirm('Deseja excluir este produto e atualizar o site público?')) {
+                produtos = produtos.filter(p => p.id !== id);
+                sincronizarServidor();
+            }
+        }
+        carregarTudo();
+    </script>
+</body>
+</html>
