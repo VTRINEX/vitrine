@@ -22,7 +22,7 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useMemo } = React;
         const DEFAULT_CATEGORIES = [
             { id: '1', name: 'Eletrônicos', slug: 'eletronicos', icon: 'ph-desktop' },
             { id: '2', name: 'Celulares', slug: 'celulares', icon: 'ph-device-mobile' },
@@ -50,16 +50,12 @@
         );
 
         const App = () => {
-            const [products, setProducts] = useState([]);
+            // A mágica acontece aqui: os dados são cravados no arquivo, sem carregar via rede
+            const [products, setProducts] = useState(
+[]
+            );
             const [searchTerm, setSearchTerm] = useState('');
             const [activeCategory, setActiveCategory] = useState(null);
-
-            useEffect(() => {
-                fetch('produtos.json?v=' + new Date().getTime())
-                    .then(res => res.json())
-                    .then(data => setProducts(data))
-                    .catch(err => console.log("Vitrine vazia", err));
-            }, []);
 
             const filteredProducts = useMemo(() => {
                 let result = products;
@@ -80,9 +76,7 @@
                                 <input type="text" placeholder="Buscar ofertas..." className="w-full bg-gray-100 rounded-full py-2 pl-4 pr-10 outline-none" onChange={(e) => setSearchTerm(e.target.value)} />
                                 <i className="ph ph-magnifying-glass absolute right-4 top-2.5 text-gray-500 text-lg"></i>
                             </div>
-                            <div className="flex items-center gap-4">
-                                {/* Stealth mode ativado */}
-                            </div>
+                            <div className="flex items-center gap-4"></div>
                         </div>
                     </header>
                     
@@ -137,4 +131,3 @@
     </script>
 </body>
 </html>
-<!-- FORCE_UPDATE: 20260704195535 -->
