@@ -32,6 +32,23 @@
 
         const formatPrice = (price) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
 
+        const Footer = () => (
+            <footer className="bg-dark text-gray-300 py-10 mt-auto border-t border-gray-800">
+                <div className="container mx-auto px-4 text-center">
+                    <div className="flex justify-center items-center gap-2 mb-6">
+                        <div className="bg-primary text-white p-1.5 rounded-lg"><i className="ph-bold ph-shopping-bag text-xl"></i></div>
+                        <h2 className="text-2xl font-bold text-white tracking-tight">VTRINEX</h2>
+                    </div>
+                    <div className="max-w-2xl mx-auto mb-6 p-4 bg-gray-800/50 rounded-xl border border-gray-700">
+                        <p className="text-xs text-gray-400 leading-relaxed text-justify md:text-center">
+                            <strong>Aviso de Transparência e Afiliados:</strong> O VTRINEX atua como uma vitrine de curadoria de produtos. Participamos de programas de afiliados e podemos receber uma comissão caso você realize uma compra através dos nossos links. Isso não altera o preço final do produto para você. Os preços e a disponibilidade dos produtos estão sujeitos a alterações sem aviso prévio.
+                        </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-500">© 2026 VTRINEX - Todos os direitos reservados.</p>
+                </div>
+            </footer>
+        );
+
         const App = () => {
             const [products, setProducts] = useState([]);
             const [searchTerm, setSearchTerm] = useState('');
@@ -64,7 +81,7 @@
                                 <i className="ph ph-magnifying-glass absolute right-4 top-2.5 text-gray-500 text-lg"></i>
                             </div>
                             <div className="flex items-center gap-4">
-                                {/* Removido cadeado e rastros de admin para stealth total */}
+                                {/* Stealth mode ativado */}
                             </div>
                         </div>
                     </header>
@@ -77,7 +94,7 @@
                             </div>
                         )}
                         
-                        <div className="container mx-auto px-4 mb-8">
+                        <div className="container mx-auto px-4 mb-8 mt-6">
                             <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
                                 <button onClick={() => setActiveCategory(null)} className={`flex flex-col items-center min-w-[80px] p-3 rounded-xl border ${!activeCategory ? 'border-primary bg-blue-50 text-primary' : 'bg-white text-gray-600'}`}>
                                     <i className="ph ph-squares-four text-2xl mb-1"></i><span className="text-xs font-medium">Todas</span>
@@ -111,6 +128,7 @@
                             </div>
                         </div>
                     </main>
+                    <Footer />
                 </div>
             );
         };

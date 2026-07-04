@@ -35,7 +35,8 @@ while true; do
             jq -r '.[] | "[\(.id)] \(.name) - R$ \(.price)"' "$FILE"
             echo ""
             read -p "Digite o número ID (entre colchetes) do produto para aniquilar: " del_id
-            jq --arg id "$del_id" 'del(.[] | select(.id == $id))' "$FILE" > tmp.json && mv tmp.json "$FILE"
+            # A correção bruta: força o json e o seu input a serem lidos da mesma forma
+            jq --arg id "$del_id" 'del(.[] | select((.id | tostring) == $id))' "$FILE" > tmp.json && mv tmp.json "$FILE"
             echo -e "\e[31m✔ Produto desintegrado com sucesso!\e[0m"
             sleep 2
             ;;
@@ -47,10 +48,11 @@ while true; do
             ;;
         4)
             echo -e "\e[35mIniciando protocolo de lançamento orbital...\e[0m"
-            git add index.html produtos.json painel.sh
-            git commit -m "Atualizacao automatica via Terminal VTRINEX"
+            git add -A
+            # O timestamp garante que o git veja isso como uma novidade absoluta
+            git commit -m "Deploy VTRINEX: $(date +'%Y-%m-%d %H:%M:%S')"
             git push origin main
-            echo -e "\e[32m✔ Código enviado! A Microsoft está atualizando os servidores. Aguarde 2 minutos e atualize o site.\e[0m"
+            echo -e "\e[32m✔ Código enviado! A Microsoft está atualizando os servidores. Aguarde 2 minutos e limpe o cache do seu navegador.\e[0m"
             sleep 4
             ;;
         5)
