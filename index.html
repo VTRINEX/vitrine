@@ -31,6 +31,11 @@
         ];
 
         const formatPrice = (price) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+        
+        // MÁQUINA DE MOER ACENTOS (Garante que Eletrônicos = eletronicos)
+        const normalizeStr = (str) => {
+            return str ? str.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
+        };
 
         const Footer = () => (
             <footer className="bg-dark text-gray-300 py-10 mt-auto border-t border-gray-800">
@@ -50,7 +55,6 @@
         );
 
         const App = () => {
-            // A mágica acontece aqui: os dados são cravados no arquivo, sem carregar via rede
             const [products, setProducts] = useState(
 [
   {
@@ -69,8 +73,12 @@
 
             const filteredProducts = useMemo(() => {
                 let result = products;
-                if (activeCategory) result = result.filter(p => p.category.toLowerCase().includes(activeCategory.toLowerCase()));
-                if (searchTerm) result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+                if (activeCategory) {
+                    result = result.filter(p => normalizeStr(p.category).includes(normalizeStr(activeCategory)));
+                }
+                if (searchTerm) {
+                    result = result.filter(p => normalizeStr(p.name).includes(normalizeStr(searchTerm)));
+                }
                 return result;
             }, [products, activeCategory, searchTerm]);
 
@@ -114,15 +122,23 @@
                         <div className="container mx-auto px-4 mb-12">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
                                 {filteredProducts.map(product => (
-                                    <div key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative">
-                                        {product.badge && <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded z-10">{product.badge}</span>}
-                                        <img src={product.imageUrl} alt={product.name} className="w-full aspect-square object-cover bg-gray-50" onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=Sem+Imagem' }}/>
+                                    <div key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
+                                        {/* BLINDAJE DO LAYOUT DA IMAGEM */}
+                                        <div className="w-full aspect-square relative bg-gray-100 flex-shrink-0">
+                                            {product.badge && <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded z-10">{product.badge}</span>}
+                                            <img 
+                                                src={product.imageUrl || 'https://via.placeholder.com/300x300/e5e7eb/9ca3af?text=Sem+Imagem'} 
+                                                alt={product.name} 
+                                                className="w-full h-full object-cover" 
+                                                onError={(e) => { e.target.src = 'https://via.placeholder.com/300x300/fee2e2/ef4444?text=Imagem+Quebrada' }}
+                                            />
+                                        </div>
                                         <div className="p-4 flex flex-col flex-1">
                                             <p className="text-xs text-gray-500 mb-1 uppercase">{product.category}</p>
                                             <h3 className="font-medium text-gray-800 text-sm mb-2 line-clamp-2 h-10">{product.name}</h3>
-                                            <div className="mt-auto">
+                                            <div className="mt-auto pt-2 border-t border-gray-50">
                                                 <span className="text-lg font-bold text-primary block mb-3">{formatPrice(product.price)}</span>
-                                                <a href={product.affiliateLink} target="_blank" className="w-full bg-secondary hover:bg-orange-500 text-white font-medium py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
+                                                <a href={product.affiliateLink || '#'} target="_blank" className="w-full bg-secondary hover:bg-orange-500 text-white font-medium py-2 rounded-lg flex items-center justify-center gap-2 text-sm">
                                                     <i className="ph-bold ph-shopping-cart"></i> Comprar
                                                 </a>
                                             </div>
