@@ -1,5 +1,7 @@
 #!/bin/bash
 FILE="produtos.json"
+[ ! -f "$FILE" ] && echo "[]" > "$FILE"
+
 while true; do
     clear
     echo -e "\e[34m======================================\e[0m"
@@ -19,7 +21,7 @@ while true; do
             read -p "Nome do Produto: " nome
             read -p "Categoria (Eletrônicos/Celulares/Casa/Moda): " cat
             read -p "Preço (Ex: 199.90 - use ponto, não vírgula): " preco
-            read -p "Selo (Ex: Oferta, Novo, ou de um ENTER pra vazio): " selo
+            read -p "Selo (Ex: Oferta, Novo, ou ENTER pra vazio): " selo
             read -p "Link da Imagem: " img
             read -p "Link de Afiliado (pra onde o botão Comprar vai): " link
             id=$(date +%s)
@@ -27,32 +29,35 @@ while true; do
             jq --arg id "$id" --arg name "$nome" --arg cat "$cat" --argjson price "${preco:-0}" --arg img "$img" --arg link "$link" --arg badge "$selo" \
             '. += [{"id": $id, "name": $name, "category": $cat, "price": $price, "imageUrl": $img, "affiliateLink": $link, "badge": $badge}]' "$FILE" > tmp.json && mv tmp.json "$FILE"
             
-            echo -e "\e[32m✔ Produto injetado no banco local!\e[0m"
+            echo -e "\e[32m✔ Produto armazenado no banco local!\e[0m"
             sleep 2
             ;;
         2)
             echo ""
             jq -r '.[] | "[\(.id)] \(.name) - R$ \(.price)"' "$FILE"
             echo ""
-            read -p "Digite o número ID (entre colchetes) do produto para aniquilar: " del_id
-            # A correção bruta: força o json e o seu input a serem lidos da mesma forma
+            read -p "Digite o número ID (entre colchetes) do produto para apagar: " del_id
             jq --arg id "$del_id" 'del(.[] | select((.id | tostring) == $id))' "$FILE" > tmp.json && mv tmp.json "$FILE"
-            echo -e "\e[31m✔ Produto desintegrado com sucesso!\e[0m"
+            echo -e "\e[31m✔ Produto varrido do mapa!\e[0m"
             sleep 2
             ;;
         3)
             echo ""
             jq -r '.[] | "-> \(.name) (\(.category)) | R$ \(.price)"' "$FILE"
             echo ""
-            read -p "Aperte ENTER para voltar ao menu..."
+            read -p "Aperte ENTER para voltar..."
             ;;
         4)
-            echo -e "\e[35mIniciando protocolo de lançamento orbital...\e[0m"
-            git add -A
-            # O timestamp garante que o git veja isso como uma novidade absoluta
-            git commit -m "Deploy VTRINEX: $(date +'%Y-%m-%d %H:%M:%S')"
+            echo -e "\e[35mIniciando protocolo de fusão estática...\e[0m"
+            
+            # Pega o arquivo template e injeta o JSON cirurgicamente na tag __DATA__
+            awk 'NR==FNR {a[NR]=$0; n=NR; next} /__DATA__/ {for(i=1; i<=n; i++) print a[i]; next} 1' "$FILE" template.html > index.html
+            
+            git add template.html index.html produtos.json painel.sh
+            git commit -m "Deploy Nativo VTRINEX: $(date +'%Y-%m-%d %H:%M:%S')"
             git push origin main
-            echo -e "\e[32m✔ Código enviado! A Microsoft está atualizando os servidores. Aguarde 2 minutos e limpe o cache do seu navegador.\e[0m"
+            
+            echo -e "\e[32m✔ Fusão concluída e enviada! O código final foi reescrito. Aguarde 2 min e atualize o site.\e[0m"
             sleep 4
             ;;
         5)
@@ -60,7 +65,7 @@ while true; do
             exit 0
             ;;
         *)
-            echo "Opção inválida, tenta de novo."
+            echo "Opção inválida."
             sleep 1
             ;;
     esac
