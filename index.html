@@ -52,7 +52,17 @@
         const App = () => {
             // A mágica acontece aqui: os dados são cravados no arquivo, sem carregar via rede
             const [products, setProducts] = useState(
-[]
+[
+  {
+    "id": "1783207121",
+    "name": "teste",
+    "category": "Eletrônicos",
+    "price": 50.25,
+    "imageUrl": "#",
+    "affiliateLink": "#",
+    "badge": "Novo"
+  }
+]
             );
             const [searchTerm, setSearchTerm] = useState('');
             const [activeCategory, setActiveCategory] = useState(null);
